@@ -5,6 +5,8 @@ import { authOptions } from "@/lib/auth";
 import { ProfileCard } from "./ProfileCard";
 import { ProfileFooter } from "./ProfileFooter";
 
+import type { Link } from "./types/type";
+
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }) {
     const { username } = await params;
 
@@ -33,7 +35,7 @@ export default async function PublicProfile({
               username: string | null;
               bio: string | null;
               image: string | null;
-              links: unknown[];
+              links: Link[];
           }
         | null = null;
 
