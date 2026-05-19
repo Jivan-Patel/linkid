@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const rawUrl = body?.url?.trim();
     const customLabel = body?.label?.trim();
+    const explicitPlatform = body?.platform?.trim();
 
     if (!rawUrl) {
         return NextResponse.json(
@@ -39,11 +40,11 @@ export async function POST(req: Request) {
     }
 
     const finalUrl = validation.normalizedUrl;
-    const detectedPlatform = detectPlatform(finalUrl);
+    const detectedPlatform = explicitPlatform || detectPlatform(finalUrl);
 
     if (!detectedPlatform) {
         return NextResponse.json(
-            { error: "Unsupported or unknown platform" },
+            { error: "Please select a platform" },
             { status: 400 }
         );
     }
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
             .replace(/[^a-z0-9-]/g, "");
     } else {
         finalPlatform = detectedPlatform;
-        finalLabel =
+        finalLabel = customLabel ||
             detectedPlatform.charAt(0).toUpperCase() +
             detectedPlatform.slice(1);
     }

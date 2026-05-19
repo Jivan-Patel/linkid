@@ -19,7 +19,7 @@ export function ProfileLinkItem({ link, username }: ProfileLinks) {
                 </div>
 
                 <span className="font-medium capitalize">
-                    {link.label || link.platform}
+                    {link.label}
                 </span>
             </div>
 
