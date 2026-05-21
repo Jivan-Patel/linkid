@@ -31,26 +31,26 @@ export default function PrivacyPolicyPage() {
           <div className="rounded-2xl border border-white/70 bg-white/70 p-6 shadow-xl shadow-violet-950/10 backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.04] dark:shadow-black/20 sm:p-8 md:p-10">
             <div className="prose prose-zinc max-w-none dark:prose-invert prose-headings:text-zinc-950 dark:prose-headings:text-white prose-h1:text-3xl prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-4 prose-p:text-zinc-600 dark:prose-p:text-zinc-300 prose-strong:text-zinc-900 dark:prose-strong:text-white prose-li:text-zinc-600 dark:prose-li:text-zinc-300">
               
-              <section>
-                <h2>1. Introduction</h2>
-                <p>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">1. Introduction</h2>
+                <p className="text-muted-foreground leading-relaxed">
                   Welcome to <strong>LinkID</strong>. Your privacy is important to us. 
                   This Privacy Policy explains how we collect, use, and safeguard your information.
                 </p>
               </section>
 
-              <section>
-                <h2>2. Information We Collect</h2>
-                <ul>
-                  <li><strong>Account Information:</strong> Username, email address, and encrypted password</li>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">2. Information We Collect</h2>
+                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+                  <li><strong>Account Information:</strong> Username, email address, and securely hashed password (bcrypt)</li>
                   <li><strong>Profile Information:</strong> Bio, avatar image, and social media links</li>
                   <li><strong>Authentication Data:</strong> When using Google/GitHub OAuth, we receive your name, email, and profile picture</li>
                 </ul>
               </section>
 
-              <section>
-                <h2>3. How We Use Your Information</h2>
-                <ul>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">3. How We Use Your Information</h2>
+                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                   <li>Create and manage your account</li>
                   <li>Display your profile and links publicly</li>
                   <li>Redirect visitors to your selected platforms</li>
@@ -59,62 +59,69 @@ export default function PrivacyPolicyPage() {
                 </ul>
               </section>
 
-              <section>
-                <h2>4. Authentication &amp; OAuth</h2>
-                <p>
-                  LinkID uses NextAuth.js for secure authentication. We support Email/Password, Google OAuth, and GitHub OAuth.
-                  Your passwords are encrypted using bcrypt. We do NOT store OAuth tokens beyond what&apos;s needed for sessions.
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">4. Authentication &amp; OAuth</h2>
+                <p className="text-muted-foreground leading-relaxed mb-3">
+                  LinkID uses NextAuth.js for secure authentication. We support:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+                  <li><strong>Email/Password:</strong> Your passwords are <strong>hashed</strong> using bcrypt (cannot be decrypted - more secure than encryption)</li>
+                  <li><strong>Google OAuth:</strong> We receive your name, email, and profile picture after your consent</li>
+                  <li><strong>GitHub OAuth:</strong> We receive your GitHub username, email, and profile information</li>
+                </ul>
+                <p className="text-muted-foreground leading-relaxed mt-3">
+                  We do NOT store OAuth tokens beyond what's necessary for session management.
                 </p>
               </section>
 
-              <section>
-                <h2>5. Cookies and Tracking</h2>
-                <p>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">5. Cookies and Tracking</h2>
+                <p className="text-muted-foreground leading-relaxed">
                   We use cookies to maintain login sessions, remember theme preferences (light/dark mode), 
-                  and understand how users interact with our platform.
+                  and understand how users interact with our platform. You can control cookie settings through your browser.
                 </p>
               </section>
 
-              <section>
-                <h2>6. Data Storage and Security</h2>
-                <p>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">6. Data Storage and Security</h2>
+                <p className="text-muted-foreground leading-relaxed">
                   Your data is stored in a secure PostgreSQL database with industry-standard security measures 
                   including password hashing, HTTPS encryption, and regular security updates.
                 </p>
               </section>
 
-              <section>
-                <h2>7. Third-Party Services</h2>
-                <p>LinkID integrates with:</p>
-                <ul>
-                  <li>GitHub/Google OAuth - For authentication</li>
-                  <li>Cloudinary - For avatar image storage</li>
-                  <li>Vercel - For hosting</li>
-                  <li>PostgreSQL - For database management</li>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">7. Third-Party Services</h2>
+                <p className="text-muted-foreground leading-relaxed mb-3">LinkID integrates with:</p>
+                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+                  <li><strong>GitHub/Google OAuth</strong> - For secure authentication</li>
+                  <li><strong>Cloudinary</strong> - For avatar image storage and optimization</li>
+                  <li><strong>Vercel</strong> - For hosting and deployment</li>
+                  <li><strong>PostgreSQL</strong> - For database management</li>
                 </ul>
               </section>
 
-              <section>
-                <h2>8. Your Rights</h2>
-                <ul>
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">8. Your Rights</h2>
+                <p className="text-muted-foreground leading-relaxed mb-3">You have the right to:</p>
+                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                   <li>Access your personal data</li>
                   <li>Request correction of inaccurate data</li>
                   <li>Request account deletion</li>
-                  <li>Object to data processing</li>
+                  <li>Object to or restrict data processing</li>
+                  <li>Data portability (receive a copy of your data)</li>
                 </ul>
               </section>
 
-              <section>
-                <h2>9. Contact Us</h2>
-                <p>
-                  Questions? Contact us at:{' '}
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-3">9. Contact Us</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  If you have questions about this Privacy Policy, please contact us at:{' '}
                   <a href="mailto:support@linkid.qzz.io" className="text-violet-600 hover:text-violet-700">
                     support@linkid.qzz.io
                   </a>
                 </p>
               </section>
-            </div>
-
             <div className="mt-12 border-t border-violet-200/60 pt-8 text-center dark:border-white/10">
               <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-600 transition-colors hover:text-violet-600">
                 ← Back to Home
