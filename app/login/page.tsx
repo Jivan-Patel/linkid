@@ -17,6 +17,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+
   async function handleLogin() {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
@@ -70,19 +73,41 @@ export default function LoginPage() {
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              disabled={googleLoading}
+              onClick={async () => {
+                setGoogleLoading(true);
+                await signIn("google", { callbackUrl: "/dashboard" });
+              }}
             >
-              <FcGoogle className="h-5 w-5" />
-              Continue with Google
+              {googleLoading ? (
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+              ) : (
+                <FcGoogle className="h-5 w-5" />
+              )}
+              {googleLoading ? "Connecting..." : "Continue with Google"}
             </Button>
 
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
-              onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+              disabled={githubLoading}
+              onClick={async () => {
+                setGithubLoading(true);
+                await signIn("github", { callbackUrl: "/dashboard" });
+              }}
             >
-              <FaGithub className="h-5 w-5" />
-              Continue with GitHub
+              {githubLoading ? (
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+              ) : (
+                <FaGithub className="h-5 w-5" />
+              )}
+              {githubLoading ? "Connecting..." : "Continue with GitHub"}
             </Button>
           </div>
 

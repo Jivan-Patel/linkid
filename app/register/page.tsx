@@ -23,6 +23,9 @@ export default function RegisterPage() {
     const [submitError, setSubmitError] = useState<string | null>(null);
     const csrfToken = useCsrf();
 
+    const [googleLoading, setGoogleLoading] = useState(false);
+    const [githubLoading, setGithubLoading] = useState(false);
+
     const getPasswordError = (value: string) => {
         if (value.length < 8) return "Must be at least 8 characters";
         if (!/[A-Z]/.test(value)) return "Must include one uppercase letter";
@@ -91,19 +94,41 @@ export default function RegisterPage() {
                         <Button
                             variant="outline"
                             className="flex w-full items-center justify-center gap-2"
-                            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                            disabled={googleLoading}
+                            onClick={async () => {
+                                setGoogleLoading(true);
+                                await signIn("google", { callbackUrl: "/dashboard" });
+                            }}
                         >
-                            <FcGoogle className="h-5 w-5" />
-                            Continue with Google
+                            {googleLoading ? (
+                                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                                </svg>
+                            ) : (
+                                <FcGoogle className="h-5 w-5" />
+                            )}
+                            {googleLoading ? "Connecting..." : "Continue with Google"}
                         </Button>
 
                         <Button
                             variant="outline"
                             className="flex w-full items-center justify-center gap-2"
-                            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+                            disabled={githubLoading}
+                            onClick={async () => {
+                                setGithubLoading(true);
+                                await signIn("github", { callbackUrl: "/dashboard" });
+                            }}
                         >
-                            <FaGithub className="h-5 w-5" />
-                            Continue with GitHub
+                            {githubLoading ? (
+                                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                                </svg>
+                            ) : (
+                                <FaGithub className="h-5 w-5" />
+                            )}
+                            {githubLoading ? "Connecting..." : "Continue with GitHub"}
                         </Button>
                     </div>
 
