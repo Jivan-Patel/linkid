@@ -7,6 +7,7 @@ import { LinksSection } from "./LinksSection";
 import type { Link as ProfileLink } from "@/app/[username]/types/type";
 import { LinkIdCard } from "./LinkIdCard";
 import { AnalyticsOverview } from "./AnalyticsOverview";
+import { detectPlatform, normalizeUrl } from "@/lib/platforms";
 
 export default function DashboardClient({
     username,
@@ -25,31 +26,59 @@ export default function DashboardClient({
         setShowAdd(false);
     }
 
-    async function updateLink(id: string, url: string, label?: string) {
+    async function updateLink(id: string, url: string, label?: string, platform?: string): Promise<boolean> {
         const csrfToken = await getCsrfToken();
 
-        const response = await fetch(`/api/links/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "x-csrf-token": csrfToken,
-            },
-            body: JSON.stringify({ url, label }),
-        });
+        try {
+            const response = await fetch(`/api/links/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-csrf-token": csrfToken,
+                },
+                body: JSON.stringify({ url, label, platform }),
+            });
 
-        if (!response.ok) {
-            const data = await response.json();
-            toast.error(data.error ?? "Failed to update link");
-            return;
+            if (!response.ok) {
+                const data = await response.json();
+                toast.error(data.error ?? "Failed to update link");
+                return false;
+            }
+
+            toast.success("Link updated");
+
+            const normalizedUrl = normalizeUrl(url);
+            const detected = platform && platform !== "website" ? platform : detectPlatform(normalizedUrl);
+            let calculatedPlatform: string;
+            if (detected === "website") {
+                const activeLabel = label !== undefined ? label : "";
+                calculatedPlatform = activeLabel
+                    .toLowerCase()
+                    .trim()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^a-z0-9-]/g, "");
+            } else {
+                calculatedPlatform = detected;
+            }
+
+            setLinks((prev) =>
+                prev.map((l) =>
+                    l.id === id
+                        ? {
+                              ...l,
+                              url: normalizedUrl,
+                              label: label !== undefined ? label : l.label,
+                              platform: calculatedPlatform || l.platform,
+                          }
+                        : l
+                )
+            );
+            return true;
+        } catch (error) {
+            console.error("Link update failed:", error);
+            toast.error("Failed to update link");
+            return false;
         }
-
-        toast.success("Link updated");
-
-        setLinks((prev) =>
-            prev.map((l) =>
-                l.id === id ? { ...l, url, label: label !== undefined ? label : l.label } : l
-            )
-        );
     }
 
     async function updateVisibility(id: string, isPublic: boolean) {

@@ -20,6 +20,32 @@ import { validateUrl } from "@/lib/urlValidation";
 import type { Link as ProfileLink } from "@/app/[username]/types/type";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
+const formatLabel = (key: string) => {
+    const exceptions: Record<string, string> = {
+        github: "GitHub",
+        linkedin: "LinkedIn",
+        x: "X (Twitter)",
+        youtube: "YouTube",
+        leetcode: "LeetCode",
+        devto: "Dev.to",
+    };
+    return exceptions[key] || key.charAt(0).toUpperCase() + key.slice(1);
+};
+
+const POPULAR_PLATFORMS = [
+    ...Object.keys(PLATFORM_ICONS)
+        .filter((key) => key !== "website" && key !== "portfolio")
+        .map((key) => ({ value: key, label: formatLabel(key) })),
+    { value: "website", label: "Personal Website / Other" },
+];
 export function LinkItem({
     dragListeners,
     dragAttributes,
@@ -33,15 +59,31 @@ export function LinkItem({
     dragAttributes?: DraggableAttributes;
     link: ProfileLink;
     username: string;
-    onUpdate: (id: string, url: string, label?: string) => Promise<void>;
+    onUpdate: (id: string, url: string, label?: string, platform?: string) => Promise<boolean>;
     onToggleVisibility: (id: string, isPublic: boolean) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
 }) {
-    const Icon = PLATFORM_ICONS[link.platform] ?? Globe;
     const [editing, setEditing] = useState(false);
     const [url, setUrl] = useState(link.url);
     const [label, setLabel] = useState(link.label || "");
+    const isStandardPlatform = Object.keys(PLATFORM_ICONS).includes(link.platform);
+    const initialPlatform = isStandardPlatform ? link.platform : "website";
+    const [platform, setPlatform] = useState(initialPlatform);
     const [copied, setCopied] = useState(false);
+    const Icon = PLATFORM_ICONS[editing ? platform : link.platform] ?? Globe;
+
+    const handlePlatformChange = (newPlatform: string) => {
+        setPlatform(newPlatform);
+
+        const prevPlatformLabel = formatLabel(platform);
+        if (
+            !label.trim() ||
+            label.trim().toLowerCase() === platform.toLowerCase() ||
+            label.trim() === prevPlatformLabel
+        ) {
+            setLabel(formatLabel(newPlatform));
+        }
+    };
 
     function copy() {
         navigator.clipboard.writeText(
@@ -63,8 +105,10 @@ export function LinkItem({
             return toast.error("Please enter a display name for this link");
         }
 
-        await onUpdate(link.id, url, trimmedLabel);
-        setEditing(false);
+        const success = await onUpdate(link.id, url, trimmedLabel, platform);
+        if (success) {
+            setEditing(false);
+        }
     }
 
     return (
@@ -77,10 +121,10 @@ export function LinkItem({
 
                     <div className="min-w-0">
                         <p className="font-medium capitalize">
-                            {link.label || link.platform}
+                            {editing ? (label || platform) : (link.label || link.platform)}
                         </p>
                         <p className="text-sm text-muted-foreground truncate">
-                            {link.url}
+                            {editing ? url : link.url}
                         </p>
                         <p className="text-xs text-muted-foreground mt-0.5">
                             {link.clicks} {link.clicks === 1 ? "click" : "clicks"}
@@ -128,6 +172,7 @@ export function LinkItem({
                             if (editing) {
                                 setUrl(link.url);
                                 setLabel(link.label || "");
+                                setPlatform(initialPlatform);
                             }
                             setEditing((v) => !v);
                         }}
@@ -156,7 +201,20 @@ export function LinkItem({
             </div>
 
             {editing && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
+                    <Select value={platform} onValueChange={handlePlatformChange}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a platform" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {POPULAR_PLATFORMS.map((p) => (
+                                <SelectItem key={p.value} value={p.value}>
+                                    {p.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
                     <div className="flex flex-col gap-2 sm:flex-row flex-1">
                         <Input
                             placeholder="Link Display Name"
