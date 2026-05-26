@@ -153,7 +153,7 @@ export default function DocumentationPage() {
 /dashboard
 /[username]
 /settings
-/docs
+/documentation
 `}
                   </pre>
                 </div>
