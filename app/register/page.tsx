@@ -77,7 +77,7 @@ export default function RegisterPage() {
             <Navbar />
 
 <div className="flex min-h-screen items-center justify-center px-4 pt-16">
-                    <div className="w-full max-w-md space-y-3 rounded-xl border bg-background p-6 shadow-sm">
+                <div className="w-full max-w-md space-y-3 rounded-xl border bg-background p-6 shadow-sm">
                     <div className="space-y-1 text-center">
                         <h1 className="text-2xl font-bold">Create your account</h1>
                         <p className="text-sm text-muted-foreground">
