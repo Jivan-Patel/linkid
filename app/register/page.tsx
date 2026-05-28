@@ -7,11 +7,13 @@ import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { getCsrfToken } from "@/lib/csrfClient";
 import { useCsrf } from "@/lib/useCsrf";
+
 import { Navbar } from "../components/Navbar";
   
 export default function RegisterPage() {
@@ -166,7 +168,7 @@ export default function RegisterPage() {
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
                                 autoComplete="new-password"
-                                 value={password}
+                                value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 className={`pl-10 pr-10 transition-colors ${password && error ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30" : ""}`}
