@@ -136,13 +136,19 @@ export default function EditProfileCard({
                     )}
                     
                     <div role="status" aria-live="polite" aria-atomic="true">
+                        {checking && (
+                            <p className="text-sm text-muted-foreground">
+                                Checking availability...
+                            </p>
+                        )}
+
                         {available === true && (
                             <p className="flex items-center gap-1 text-sm text-green-600">
                                 <Check className="h-4 w-4" /> Username available
                             </p>
                         )}
 
-                        {available === false && (
+                        {!checking && available === false && (
                             <p className="flex items-center gap-1 text-sm text-red-600">
                                 <X className="h-4 w-4" /> Username already taken
                             </p>
