@@ -74,11 +74,19 @@ export async function getEditableProfileState(
       select: { name: true, username: true, bio: true, image: true },
     });
 
+    // If a draft exists but the live user record is missing, the system
+    // is in an inconsistent state. Remove the stale draft and surface
+    // a clear error so callers don't operate on orphaned drafts.
+    if (!user) {
+      await prisma.profileDraft.deleteMany({ where: { userId } });
+      throw new Error("User not found");
+    }
+
     return {
-      name: draft.name ?? user?.name ?? null,
-      username: draft.username ?? user?.username ?? null,
-      bio: draft.bio ?? user?.bio ?? null,
-      image: draft.image ?? user?.image ?? null,
+      name: draft.name ?? user.name ?? null,
+      username: draft.username ?? user.username ?? null,
+      bio: draft.bio ?? user.bio ?? null,
+      image: draft.image ?? user.image ?? null,
     };
   }
 
