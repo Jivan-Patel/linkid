@@ -1,5 +1,5 @@
 "use client";
-
+import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -120,7 +120,15 @@ export function LinkItem({
                         <p className="text-xs text-muted-foreground mt-0.5">
                             {link.clicks} {link.clicks === 1 ? "click" : "clicks"}
                         </p>
-                        <p className="mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+                        {link.updatedAt && (
+                        <p className="text-xs text-muted-foreground">
+                                Updated{" "}
+                                {formatDistanceToNow(new Date(link.updatedAt), {
+                                    addSuffix: true,
+                                })}
+                        </p>
+                    )}
+                            <p className="mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
                             {link.isPublic ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
                             {link.isPublic ? "Public" : "Private"}
                         </p>
