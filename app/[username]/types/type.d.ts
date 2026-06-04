@@ -2,7 +2,6 @@ export type Link = {
     label: string;
     id: string;
     createdAt: Date;
-    updatedAt: Date;
     platform: string;
     url: string;
     position: number;
@@ -22,12 +21,21 @@ export type User = {
         username: string;
         bio: string | null;
         image: string | null;
-        links: Link[]
+        links?: Link[];
     };
     username: string;
     showCTA: boolean;
 }
 
+export type ProfileCardProps = User & {
+    isOwner: boolean;
+};
+
+export type ProfileLinksProps = {
+    links?: Link[];
+    username: string;
+    isOwner: boolean;
+};
 
 export type ProfileHeader = {
     name: string | null;
