@@ -17,15 +17,22 @@ function validateResumeUrl(url: string): { valid: true } | { valid: false; error
         return { valid: false, error: "URL is too long" };
     }
 
-    // Check for allowed file extensions
-    const lowercaseUrl = url.toLowerCase();
-    const hasAllowedExtension = ALLOWED_EXTENSIONS.some(ext => lowercaseUrl.endsWith(ext));
-    
-    if (!hasAllowedExtension) {
-        return { 
-            valid: false, 
-            error: `Resume URL must point to a file with one of these extensions: ${ALLOWED_EXTENSIONS.join(", ")}` 
-        };
+    // Parse URL and extract pathname for extension validation
+    try {
+        const parsedUrl = new URL(url);
+        const pathname = parsedUrl.pathname.toLowerCase();
+        
+        // Check for allowed file extensions in the pathname only
+        const hasAllowedExtension = ALLOWED_EXTENSIONS.some(ext => pathname.endsWith(ext));
+        
+        if (!hasAllowedExtension) {
+            return { 
+                valid: false, 
+                error: `Resume URL must point to a file with one of these extensions: ${ALLOWED_EXTENSIONS.join(", ")}` 
+            };
+        }
+    } catch {
+        return { valid: false, error: "Invalid URL format" };
     }
 
     return { valid: true };

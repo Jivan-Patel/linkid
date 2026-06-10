@@ -102,18 +102,24 @@ export function ResumeCard({ initialResumeUrl, initialDownloadCount }: ResumeCar
         if (!trimmed) return true; // Empty is valid (removing resume)
         
         try {
-            const lowerUrl = trimmed.toLowerCase();
-            return lowerUrl.endsWith(".pdf") || lowerUrl.endsWith(".doc") || lowerUrl.endsWith(".docx");
+            const parsedUrl = new URL(trimmed);
+            const pathname = parsedUrl.pathname.toLowerCase();
+            return pathname.endsWith(".pdf") || pathname.endsWith(".doc") || pathname.endsWith(".docx");
         } catch {
             return false;
         }
     }
 
     function getFileType(url: string): string {
-        const lowerUrl = url.toLowerCase();
-        if (lowerUrl.endsWith(".pdf")) return "PDF";
-        if (lowerUrl.endsWith(".docx")) return "Word";
-        if (lowerUrl.endsWith(".doc")) return "Word";
+        try {
+            const parsedUrl = new URL(url);
+            const pathname = parsedUrl.pathname.toLowerCase();
+            if (pathname.endsWith(".pdf")) return "PDF";
+            if (pathname.endsWith(".docx")) return "Word";
+            if (pathname.endsWith(".doc")) return "Word";
+        } catch {
+            // Fallback to simple check if URL parsing fails
+        }
         return "Document";
     }
 
