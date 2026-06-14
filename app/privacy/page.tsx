@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
             <p className="mt-5 text-base leading-7 text-zinc-600 dark:text-zinc-300 sm:text-lg">
               How we collect, use, and protect your personal information when you use LinkID.
             </p>
-            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">Last updated: June 2025</p>
+            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">Last updated: June 2026</p>
             <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600" />
           </div>
         </section>

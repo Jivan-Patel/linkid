@@ -60,7 +60,7 @@ export default function StatusPage() {
               Service Status
             </h1>
             <p className="mt-5 text-base leading-7 text-zinc-600 dark:text-zinc-300 sm:text-lg">
-              Live operational status of all LinkID services and infrastructure.
+              Current operational status of all LinkID services and infrastructure.
             </p>
             <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600" />
           </div>
@@ -81,8 +81,12 @@ export default function StatusPage() {
                   {allOperational ? "All systems are fully operational." : "Some systems are experiencing issues."}
                 </p>
               </div>
+              <p className="mb-6 text-xs text-zinc-500 dark:text-zinc-400">
+                Note: This status page currently displays default values and is not yet connected to live health checks. For real incident reports, please use the GitHub link below.
+              </p>
 
               <div className="divide-y divide-zinc-200/70 overflow-hidden rounded-2xl border border-zinc-200/70 dark:divide-white/10 dark:border-white/10">
+              
                 {services.map((service) => {
                   const cfg = statusConfig[service.status];
                   return (
