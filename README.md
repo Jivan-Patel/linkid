@@ -138,6 +138,9 @@ GITHUB_CLIENT_SECRET="your-github-client-secret"
 # Run migrations
 npx prisma migrate dev
 
+# If migrations aren't working as expected, check /prisma/migrations find the latest init migration. Mark migrations before that as applied using :
+npx prisma migrate resolve --applied <migration_name>
+
 # (Optional) Open Prisma Studio to inspect data
 npx prisma studio
 ```
