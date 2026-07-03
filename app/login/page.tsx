@@ -48,7 +48,7 @@ export default function LoginPage() {
       if (response?.url) {
         window.location.href = response.url;
       }
-    } catch (err) {
+    } catch {
       setError("Login failed. Please try again.");
     } finally {
       setLoading(false);

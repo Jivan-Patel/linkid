@@ -28,7 +28,8 @@ Share2,
   Code2,
 } from "lucide-react";
 import React from "react";
-
+import PlatformShowcase from "@/components/PlatformShowcase";
+import { SectionHeader } from "@/components/SectionHeader";
 const stats = [
   { value: "10+", label: "Platforms Supported" },
   { value: "Unlimited", label: "Custom Links" },
@@ -99,7 +100,7 @@ export default async function Home() {
         {/* Hero Section */}
         <section
           id="hero"
-          className="relative flex min-h-screen items-center border-b border-violet-200/60 px-4 pb-16 pt-32 dark:border-white/10 sm:px-6 lg:px-8"
+          className="relative flex min-h-screen items-center border-b border-violet-200/60 px-4 pb-16 pt-32 sm:px-6 lg:px-8 dark:border-white/10"
         >
           {" "}
           <div className="absolute inset-0 -z-20 bg-[linear-gradient(to_right,rgba(124,58,237,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.08)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:linear-gradient(to_bottom,black,transparent_88%)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)]" />
@@ -138,7 +139,7 @@ export default async function Home() {
                   <a href="#demo">View Demo</a>
                 </Button>
               </div>
-
+            
               <div className="mt-8 flex flex-col items-center gap-3 text-sm text-zinc-600 dark:text-zinc-300 sm:flex-row sm:justify-center lg:justify-start">
                 <ProofItem>OAuth-ready</ProofItem>
                 <ProofItem>Dark mode</ProofItem>
@@ -198,6 +199,8 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        <PlatformShowcase />
 
         {/* Stats Section */}
         <section className="relative px-4 py-14 sm:px-6 lg:px-8">
@@ -558,33 +561,6 @@ function StatCard({ value, label }: { value: string; label: string }) {
 function SectionWash() {
   return (
     <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-white/50 to-transparent dark:from-white/[0.03]" />
-  );
-}
-
-function SectionHeader({
-  eyebrow,
-  title,
-  desc,
-  align = "center",
-}: {
-  eyebrow: string;
-  title: string;
-  desc: string;
-  align?: "left" | "center";
-}) {
-  const alignment = align === "center" ? "mx-auto text-center" : "";
-  return (
-    <div className={`max-w-2xl ${alignment}`}>
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-600 dark:text-violet-300">
-        {eyebrow}
-      </p>
-      <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
-        {title}
-      </h2>
-      <p className="mt-4 text-base leading-7 text-zinc-600 dark:text-zinc-300">
-        {desc}
-      </p>
-    </div>
   );
 }
 

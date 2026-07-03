@@ -16,7 +16,7 @@ import { PLATFORMS } from "@/lib/constants";
 
 import { validateUrl } from "@/lib/urlValidation";
 import type { Link as ProfileLink } from "@/app/[username]/types/type";
-import { formatLabel, POPULAR_PLATFORMS } from "@/lib/platformHelpers";
+import { POPULAR_PLATFORMS } from "@/lib/platformHelpers";
 
 /**
  * AddLinkBox Component
