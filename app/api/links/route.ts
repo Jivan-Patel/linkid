@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     const rawUrl = body?.url?.trim();
     const customLabel = body?.label?.trim();
     const rawAlias = body?.alias?.trim();
-    let customAlias = rawAlias ? rawAlias.toLowerCase().replace(/[^a-z0-9-]/g, "") : undefined;
+    const customAlias = rawAlias ? rawAlias.toLowerCase().replace(/[^a-z0-9-]/g, "") : undefined;
     
     if (rawAlias && !customAlias) {
         return NextResponse.json(
@@ -173,6 +173,8 @@ export async function POST(req: Request) {
                     position: (maxOrder._max.position ?? 0) + 1,
                 },
             });
+        }, {
+            isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
         });
 
         return NextResponse.json({ link });
