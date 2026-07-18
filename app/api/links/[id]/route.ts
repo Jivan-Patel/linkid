@@ -122,6 +122,28 @@ export async function PUT(
     return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
   }
 
+  // Enforce uniqueness for the resulting route if platform is changing
+  if (data.platform) {
+      const proposedRoute = link.alias || data.platform;
+      const existingLink = await prisma.link.findFirst({
+          where: {
+              userId: link.userId,
+              id: { not: link.id },
+              OR: [
+                  { alias: proposedRoute },
+                  { platform: proposedRoute, alias: null }
+              ]
+          }
+      });
+
+      if (existingLink) {
+          return NextResponse.json(
+              { error: `The route '/${proposedRoute}' is already in use.` },
+              { status: 409 }
+          );
+      }
+  }
+
   try {
     const updatedLink = await prisma.link.update({
       where: { id },

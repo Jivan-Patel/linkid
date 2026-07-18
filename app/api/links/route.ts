@@ -44,6 +44,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const rawUrl = body?.url?.trim();
     const customLabel = body?.label?.trim();
+    const customAlias = body?.alias?.trim();
     const rawExplicitPlatform = body?.platform?.trim();
     const explicitPlatform = rawExplicitPlatform && Object.keys(PLATFORM_ICONS).includes(rawExplicitPlatform) 
         ? rawExplicitPlatform 
@@ -123,6 +124,24 @@ export async function POST(req: Request) {
         );
     }
 
+    const proposedRoute = customAlias || finalPlatform;
+    const existingLink = await prisma.link.findFirst({
+        where: {
+            userId: user.id,
+            OR: [
+                { alias: proposedRoute },
+                { platform: proposedRoute, alias: null }
+            ]
+        }
+    });
+
+    if (existingLink) {
+        return NextResponse.json(
+            { error: `The route '/${proposedRoute}' is already in use. Please provide a unique custom alias.` },
+            { status: 409 }
+        );
+    }
+
     try {
         const link = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
             const maxOrder = await tx.link.aggregate({
@@ -141,6 +160,7 @@ export async function POST(req: Request) {
                 data: {
                     userId: user.id,
                     platform: finalPlatform,
+                    alias: customAlias || null,
                     label: finalLabel,
                     url: finalUrl,
                     position: (maxOrder._max.position ?? 0) + 1,
