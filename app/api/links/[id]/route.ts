@@ -122,36 +122,43 @@ export async function PUT(
     return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
   }
 
-  // Enforce uniqueness for the resulting route if platform is changing
-  if (data.platform) {
-      const proposedRoute = link.alias || data.platform;
-      const existingLink = await prisma.link.findFirst({
-          where: {
-              userId: link.userId,
-              id: { not: link.id },
-              OR: [
-                  { alias: proposedRoute },
-                  { platform: proposedRoute, alias: null }
-              ]
-          }
-      });
-
-      if (existingLink) {
-          return NextResponse.json(
-              { error: `The route '/${proposedRoute}' is already in use.` },
-              { status: 409 }
-          );
-      }
-  }
-
   try {
-    const updatedLink = await prisma.link.update({
-      where: { id },
-      data,
+    const updatedLink = await prisma.$transaction(async (tx) => {
+        // Enforce uniqueness for the resulting route if platform is changing
+        if (data.platform) {
+            const proposedRoute = link.alias || data.platform;
+            const existingLink = await tx.link.findFirst({
+                where: {
+                    userId: link.userId,
+                    id: { not: link.id },
+                    OR: [
+                        { alias: proposedRoute },
+                        { platform: proposedRoute, alias: null }
+                    ]
+                }
+            });
+
+            if (existingLink) {
+                throw Object.assign(new Error("ROUTE_ALREADY_EXISTS"), { code: "ROUTE_ALREADY_EXISTS", proposedRoute });
+            }
+        }
+
+        return tx.link.update({
+            where: { id },
+            data,
+        });
     });
 
     return NextResponse.json({ success: true, link: updatedLink });
   } catch (err: unknown) {
+    const error = err as { code?: string; proposedRoute?: string };
+    
+    if (error?.code === "ROUTE_ALREADY_EXISTS") {
+        return NextResponse.json(
+            { error: `The route '/${error.proposedRoute}' is already in use.` },
+            { status: 409 }
+        );
+    }
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
       const labelForErrorMessage = (typeof label === "string" ? label.trim() : link.label) || "custom link";
       return NextResponse.json(
