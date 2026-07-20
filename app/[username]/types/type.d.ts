@@ -32,6 +32,7 @@ export type User = {
 
 export type ProfileCardProps = User & {
     isOwner: boolean;
+    themeType?: string | null;
 };
 
 export type ProfileLinksProps = {
