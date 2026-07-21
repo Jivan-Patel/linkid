@@ -36,6 +36,8 @@ model User {
   previewTokens ProfilePreviewToken[]
   createdAt     DateTime @default(now())
 
+  theme         String   @default("default")
+
   @@index([username])
 }
 

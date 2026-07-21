@@ -111,7 +111,7 @@ export default async function PublicProfile({
   });
 
   return (
-    <main className="min-h-screen px-4 py-16" style={bgStyle}>
+    <main className={`min-h-screen px-4 py-16 theme-${user.theme || "default"}`}>
       <div className="mx-auto max-w-md">
         <ProfileCard
           user={{

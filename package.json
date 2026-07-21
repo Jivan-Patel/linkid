@@ -10,6 +10,7 @@
     "start": "next start",
     "postinstall": "node scripts/postinstall-prisma-generate.mjs",
     "migrate:deploy:safe": "node scripts/safe-prisma-migrate-deploy.mjs",
+    "dbpush": "prisma db push",
     "lint": "eslint",
     "test": "tsx --test --experimental-test-module-mocks lib/**/*.test.ts app/**/*.test.ts",
     "test:ui": "jest",
