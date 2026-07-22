@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/app/components/ThemeToggle";
+import { LanguageSwitcher } from "@/app/components/LanguageSwitcher";
 import { Link2, Menu, X } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
 
@@ -162,6 +163,7 @@ export function Navbar() {
 
                     {/* Desktop right actions */}
                     <div className="hidden items-center gap-2 md:flex">
+                        <LanguageSwitcher />
                         <ThemeToggle />
                         <Button
                             asChild
@@ -187,6 +189,7 @@ export function Navbar() {
 
                     {/* Mobile: theme toggle + hamburger */}
                     <div className="flex items-center gap-2 md:hidden">
+                        <LanguageSwitcher />
                         <ThemeToggle />
                         <button
                             onClick={() => setMobileOpen((o) => !o)}

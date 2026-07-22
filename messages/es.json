@@ -1,0 +1,13 @@
+{
+  "Common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error."
+  },
+  "Navigation": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "dashboard": "Panel",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión"
+  }
+}

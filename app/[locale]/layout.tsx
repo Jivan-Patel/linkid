@@ -1,7 +1,9 @@
+import {NextIntlClientProvider} from 'next-intl';
+import {getMessages} from 'next-intl/server';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Providers from "./providers";
+import "../globals.css";
+import Providers from "../providers";
 import BackToTop from "@/components/ui/BackToTop";
 
 import PwaRegister from "@/components/PwaRegister";
@@ -29,19 +31,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+  params: {locale}
+}: {
   children: React.ReactNode;
-}>) {
+  params: {locale: string};
+}) {
+  const messages = await getMessages();
+  // Basic RTL handling for arabic
+  const dir = locale === 'ar' ? 'rtl' : 'ltr';
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <body
         className={`${inter.variable} antialiased`}
       >
-        <PwaRegister />
-        <Providers>{children}</Providers>
-        <BackToTop />
+        <NextIntlClientProvider messages={messages}>
+          <PwaRegister />
+          <Providers>{children}</Providers>
+          <BackToTop />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

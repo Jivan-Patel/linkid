@@ -1,25 +1,44 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import createMiddleware from 'next-intl/middleware';
 
 import { applyCsrfProtection } from "@/lib/middleware/csrf";
+import { locales } from './i18n';
+
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale: 'en',
+  localePrefix: 'as-needed'
+});
 
 export async function middleware(req: NextRequest) {
     const token = await getToken({ req });
     const { pathname } = req.nextUrl;
 
-    // If logged in & trying to access /login or /register → redirect to dashboard
-    if (token && (pathname === "/login" || pathname === "/register")) {
-        return NextResponse.redirect(new URL("/dashboard", req.url));
+    // Handle locale prefixes for manual path checks
+    const pathnameWithoutLocale = locales.some(locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`)
+        ? pathname.replace(new RegExp(`^/(${locales.join('|')})`), '') || '/'
+        : pathname;
+
+    // Skip middleware for API routes and static files to avoid next-intl capturing them incorrectly if matcher isn't strict enough
+    if (pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.includes('.')) {
+        if (pathname.startsWith('/api')) {
+             const csrfResponse = await applyCsrfProtection(req);
+             if (csrfResponse) return csrfResponse;
+        }
+        return NextResponse.next();
     }
 
-    // If NOT logged in & trying to access /dashboard → redirect to login (#398)
-    if (!token && pathname.startsWith("/dashboard")) {
+    // Auth redirects
+    if (token && (pathnameWithoutLocale === "/login" || pathnameWithoutLocale === "/register")) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+    if (!token && pathnameWithoutLocale.startsWith("/dashboard")) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
     const csrfResponse = await applyCsrfProtection(req);
-
     if (csrfResponse) {
         return csrfResponse;
     }
@@ -41,20 +60,15 @@ export async function middleware(req: NextRequest) {
       upgrade-insecure-requests;
     `.replace(/\s{2,}/g, " ").trim();
 
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-nonce", nonce);
-    requestHeaders.set("Content-Security-Policy", cspHeader);
+    req.headers.set("x-nonce", nonce);
+    req.headers.set("Content-Security-Policy", cspHeader);
 
-    const response = NextResponse.next({
-        request: {
-            headers: requestHeaders,
-        },
-    });
+    const response = intlMiddleware(req);
 
     response.headers.set("Content-Security-Policy", cspHeader);
     return response;
 }
 
 export const config = {
-    matcher: ["/login", "/register", "/dashboard/:path*", "/api/:path*"],
+    matcher: ['/((?!api|_next|_vercel|.*\\..*).*)', '/api/:path*']
 };
