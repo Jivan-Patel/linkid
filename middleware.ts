@@ -24,7 +24,35 @@ export async function middleware(req: NextRequest) {
         return csrfResponse;
     }
 
-    return NextResponse.next();
+    const nonce = crypto.randomUUID();
+    const isDev = process.env.NODE_ENV === "development";
+    
+    const cspHeader = `
+      default-src 'self';
+      script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""};
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' blob: data: https://res.cloudinary.com https://lh3.googleusercontent.com https://avatars.githubusercontent.com;
+      font-src 'self' data:;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'none';
+      connect-src 'self';
+      upgrade-insecure-requests;
+    `.replace(/\s{2,}/g, " ").trim();
+
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-nonce", nonce);
+    requestHeaders.set("Content-Security-Policy", cspHeader);
+
+    const response = NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
+
+    response.headers.set("Content-Security-Policy", cspHeader);
+    return response;
 }
 
 export const config = {
