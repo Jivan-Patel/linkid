@@ -38,6 +38,8 @@ model User {
 
   theme         String   @default("default")
 
+  customDomain  String?  @unique
+
   @@index([username])
 }
 
