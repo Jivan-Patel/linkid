@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getCsrfToken } from "@/lib/csrfClient";
-import { DashboardNavbar } from "../components/DashboardNavbar";
+import { DashboardNavbar } from "../../components/DashboardNavbar";
 import { Check } from "lucide-react";
 import { validateUsername } from "@/lib/validations/username";
 import toast, { Toaster } from "react-hot-toast";

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
-import { Navbar } from "../components/Navbar";
+import { Navbar } from "../../components/Navbar";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
