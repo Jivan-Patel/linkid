@@ -7,6 +7,7 @@ import { LinksSection } from "./LinksSection";
 import type { Link as ProfileLink } from "@/app/[username]/types/type";
 import { LinkIdCard } from "./LinkIdCard";
 import { AnalyticsOverview } from "./AnalyticsOverview";
+import { VersionHistory } from "@/components/dashboard/VersionHistory";
 import { AppearanceSection } from "./AppearanceSection";
 
 export default function DashboardClient({
@@ -142,7 +143,14 @@ export default function DashboardClient({
 
                 <LinkIdCard username={username} qrCode={qrCode} />
 
-                <AnalyticsOverview />
+                <div className="grid gap-6 md:grid-cols-3">
+                    <div className="md:col-span-2">
+                        <AnalyticsOverview />
+                    </div>
+                    <div>
+                        <VersionHistory />
+                    </div>
+                </div>
 
                 <div className="flex gap-4 border-b">
                     <button 
