@@ -38,6 +38,10 @@ model User {
 
   theme         String   @default("default")
 
+  totpSecret       String?
+  twoFactorEnabled Boolean  @default(false)
+  recoveryCodes    String?
+
   @@index([username])
 }
 
