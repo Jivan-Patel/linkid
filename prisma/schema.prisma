@@ -38,6 +38,7 @@ model User {
 
   theme         String   @default("default")
 
+  customDomain  String?  @unique
   totpSecret       String?
   twoFactorEnabled Boolean  @default(false)
   recoveryCodes    String?

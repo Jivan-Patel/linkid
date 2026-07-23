@@ -18,6 +18,16 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
+    const host = req.headers.get("host");
+    const isLocal = host?.includes("localhost") || host?.includes("127.0.0.1");
+    const isBaseDomain = host?.includes("linkid.qzz.io") || host?.includes(process.env.NEXT_PUBLIC_APP_URL?.replace("https://", "") || "");
+    const isCustomDomain = host && !isLocal && !isBaseDomain;
+
+    if (isCustomDomain) {
+        // Rewrite to a special domain handler route that will fetch the user by domain
+        return NextResponse.rewrite(new URL(`/domain/${host}${pathname}`, req.url));
+    }
+
     const csrfResponse = await applyCsrfProtection(req);
 
     if (csrfResponse) {
@@ -56,5 +66,14 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/login", "/register", "/dashboard/:path*", "/api/:path*"],
+    matcher: [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - api (API routes)
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         */
+        "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    ],
 };
