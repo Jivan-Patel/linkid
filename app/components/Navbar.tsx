@@ -217,7 +217,7 @@ export function Navbar() {
                     className={`mt-2 overflow-hidden rounded-3xl border transition-all duration-300 ease-in-out md:hidden ${mobileOpen
                         ? "max-h-80 border-violet-300/20 opacity-100 shadow-lg shadow-violet-950/20 dark:border-violet-500/20 dark:shadow-violet-950/40"
                         : "max-h-0 border-transparent opacity-0"
-                        } bg-white/15 backdrop-blur-3xl dark:bg-violet-950/60`}
+                        } bg-white/95 backdrop-blur-3xl dark:bg-violet-950/95`}
                 >
                     <div className="px-3 pb-4 pt-3">
                         <nav className="mb-3 flex flex-col gap-1">
